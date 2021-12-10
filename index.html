@@ -21,6 +21,8 @@
         <span id="percent-damage"></span>
     </div>
     <script>
+        var debug = false;
+
         function requestORES() {
             document.getElementById("message-damage").innerHTML = '';
             document.getElementById("percent-damage").innerHTML = '';
@@ -28,13 +30,20 @@
             fetch('https://ores.wikimedia.org/scores/frwiki/?models=damaging&revids=' + revids)
                 .then(response => response.json())
                 .then(json => {
-                    console.log(json[revids].damaging);
+                    if (debug === true) {
+                        console.log(json[revids].damaging);
+                    }
                     if (json[revids].damaging.prediction === true) {
-                        document.getElementById("message-damage").innerHTML = "Probabilité de dégat de la modification :"
-                        document.getElementById("percent-damage").innerHTML = (json[revids].damaging.probability.true * 100).toFixed(2) + '%';
+                        document.getElementById("message-damage").innerHTML =
+                            "Probabilité de dégat de la modification :"
+                        document.getElementById("percent-damage").innerHTML = (json[revids].damaging.probability
+                            .true * 100).toFixed(2) + '%';
                     } else if (json[revids].damaging.prediction === false) {
-                        document.getElementById("message-damage").innerHTML = "L'analyse ORES n'a pas détecté de dégat dans la modification.";
-                        document.getElementById("percent-damage").innerHTML = '<br>Probabilité que la modification soit correcte : ' + (json[revids].damaging.probability.false * 100).toFixed(2) + '%'
+                        document.getElementById("message-damage").innerHTML =
+                            "L'analyse ORES n'a pas détecté de dégat dans la modification.";
+                        document.getElementById("percent-damage").innerHTML =
+                            '<br>Probabilité que la modification soit correcte : ' + (json[revids].damaging
+                                .probability.false * 100).toFixed(2) + '%'
                     }
                 })
         }
